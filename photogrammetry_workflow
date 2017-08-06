@@ -1,1 +1,43 @@
 Workflow to take single context point clouds and create volumetric entities
+
+# create a bounding polygon1 for pointcloud1
+docker run -it --rm -v /p/KAP:/opt/data chambbj/pdal-noble-kernel pdal info opt/data/1.las --boundary
+
+#pipeline
+#https://www.pdal.io/tutorial/clipping-with-shapefile.html
+
+
+
+
+
+ {
+    "pipeline": [
+        "p:/KAP/1.laz",
+        {
+            "column": "CLS",
+            "datasource": "c:/Users/hobu/PDAL/exercises/analysis/clipping/attributes.vrt",
+            "dimension": "Classification",
+            "layer": "OGRGeoJSON",
+            "type": "filters.overlay"
+        },
+        {
+            "limits": "Classification[6:6]",
+            "type": "filters.range"
+        },
+        "c:/Users/hobu/PDAL/exercises/analysis/clipping/stadium.las"
+    ]
+}
+   
+
+
+
+# clip pointcloud2 by polygon1
+
+# repeat clipping for pointcloud1
+
+
+
+
+
+#run the PDAL-noble-kernel
+docker run -it --rm -v /p/KAP:/opt/data chambbj/pdal-noble-kernel pdal noble /opt/data/1.las /opt/data/2.las /opt/data/out1_2_1cm.las 0.01
