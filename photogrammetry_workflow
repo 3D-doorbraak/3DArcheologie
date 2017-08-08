@@ -1,6 +1,5 @@
-
 #Workflow to take single context point clouds and create volumetric entities
-#
+# last updated 08/08/2017
 # By chambbj <real name?> and Gary Nobles
 #
 # once docker is set up get PDAL
@@ -20,23 +19,37 @@ docker ps -a
 # from this you can get the <name>
 # docker commit <name> chambbj/pdal-noble-kernel-with-jq
 
-docker commit determined_rosalind chambbj/pdal-noble-kernel-with-jq
+# pointcloud list:
+201406151141.las
+201407031017.las
+201407060711.las
+201407061221.las
+201407071201.las
 
-# clip the point clouds based on teh extent of the other point cloud
+docker commit determined_rosalind chambbj/pdal-noble-kernel-with-jq
+docker commit kind_brattain chambbj/pdal-noble-kernel-with-jq
+
+# clip the point clouds based on the extent of the other point cloud
 # this removes 'outliers' or edge effects which are irrelevent to our context
 # has to be run for each point cloud
 
-# point cloud 1.las
 
-docker run -it --rm -v /p/KAP/:/opt/data chambbj/pdal-noble-kernel-with-jq bash -c \
-    "pdal info /opt/data/1.las --boundary | jq .boundary.boundary \
-    | xargs -I {} pdal translate /opt/data/2.las /opt/data/clipped_1.las crop \
+#does power shell allow for variables
+$dir = "C:\Users\MAKuser\point_clouds"
+
+
+
+# point cloud 201406151141.las
+
+docker run -it --rm -v /c/Users/MAKuser/point_clouds:/opt/data/F80 chambbj/pdal-noble-kernel-with-jq bash -c \
+    "pdal info /opt/data/F80/201406151141.las --boundary | jq .boundary.boundary \
+    | xargs -I {} pdal translate /opt/data/201407031017.las /opt/data/F80/clipped_1.las crop \
         --filters.crop.polygon={}”
 
 # point cloud 2.las
 
 docker run -i --rm -v /p/KAP/:/opt/data chambbj/pdal-noble-kernel-with-jq bash -c \
-    "pdal info /opt/data/2.las --boundary | jq .boundary.boundary \
+    "pdal info /opt/data/.las --boundary | jq .boundary.boundary \
     | xargs -I {} pdal translate /opt/data/1.las /opt/data/clipped_2.las crop \
         --filters.crop.polygon={}”
         
