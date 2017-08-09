@@ -41,7 +41,7 @@ $dir = "C:\Users\MAKuser\point_clouds"
 
 # point cloud 201406151141.las
 
-docker run -it --rm -v /c/Users/MAKuser/point_clouds:/opt/data/F80 chambbj/pdal-noble-kernel-with-jq bash -c \
+docker run -it --rm -v /p/KAP/:/opt/data/F80 chambbj/pdal-noble-kernel-with-jq bash -c \
     "pdal info /opt/data/F80/201406151141.las --boundary | jq .boundary.boundary \
     | xargs -I {} pdal translate /opt/data/201407031017.las /opt/data/F80/clipped_1.las crop \
         --filters.crop.polygon={}”
